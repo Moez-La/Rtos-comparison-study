@@ -2,66 +2,73 @@
 #include <functional>
 #include <string>
 #include <cstdint>
-#include <memory>
 
 enum class TaskState {
-    READY,      // Ready to run
-    RUNNING,    // Currently executing
-    BLOCKED,    // Waiting for resource
-    SUSPENDED   // Temporarily suspended
+    READY,
+    RUNNING,
+    BLOCKED,
+    SUSPENDED
 };
 
 class Task {
 private:
     std::string name_;
-    uint8_t priority_;              // 0 = lowest, 255 = highest
+    uint8_t priority_;
     TaskState state_;
     std::function<void()> task_function_;
-    uint32_t period_ms_;            // Task period (0 = no periodic execution)
-    uint32_t next_wake_time_;       // When task should wake up
-    uint32_t stack_size_;
-    
-    // Statistics
+    uint32_t period_ms_;
+    uint32_t next_wake_time_;
     uint32_t execution_count_;
     
 public:
     Task(const std::string& name, 
          uint8_t priority,
          std::function<void()> func,
-         uint32_t period_ms = 0,
-         uint32_t stack_size = 1024)
+         uint32_t period_ms = 0)
         : name_(name)
         , priority_(priority)
         , state_(TaskState::READY)
         , task_function_(std::move(func))
         , period_ms_(period_ms)
         , next_wake_time_(0)
-        , stack_size_(stack_size)
         , execution_count_(0) {}
     
-    // Execute task function
     void execute() {
-        if (state_ == TaskState::READY || state_ == TaskState::RUNNING) {
-            task_function_();
-            execution_count_++;
-        }
+        task_function_();
+        execution_count_++;
     }
     
-    // Check if task should run (for periodic tasks)
     bool shouldRun(uint32_t current_time) const {
-        if (period_ms_ == 0) {
-            // Event-driven task, runs when READY
-            return state_ == TaskState::READY;
+        // Must be in READY state
+        if (state_ != TaskState::READY) {
+            return false;
         }
+        
+        // Event-driven task (period=0)
+        // Only run once then go to BLOCKED until explicitly woken up
+        if (period_ms_ == 0) {
+            // If next_wake_time is in the future, task is blocked
+            return (current_time >= next_wake_time_);
+        }
+        
         // Periodic task
-        return (state_ == TaskState::READY) && (current_time >= next_wake_time_);
+        return (current_time >= next_wake_time_);
     }
     
-    // Update next wake time (for periodic tasks)
     void updateWakeTime(uint32_t current_time) {
         if (period_ms_ > 0) {
+            // Periodic: schedule next execution
             next_wake_time_ = current_time + period_ms_;
+        } else {
+            // Event-driven: block until explicitly woken
+            // Set to maximum value so shouldRun() returns false
+            next_wake_time_ = UINT32_MAX;
         }
+    }
+    
+    // Wake up an event-driven task
+    void wakeup() {
+        next_wake_time_ = 0;  // Ready to run immediately
     }
     
     // Getters

@@ -1,6 +1,6 @@
 #pragma once
 #include <mutex>
-#include <chrono>
+#include <cstdint>
 
 class Mutex {
 private:
@@ -8,23 +8,21 @@ private:
     
 public:
     Mutex() = default;
+    ~Mutex() = default;
     
-    // Lock mutex
     void lock() {
         mutex_.lock();
     }
     
-    // Try to lock with timeout
-    bool tryLock(uint32_t timeout_ms) {
-        return mutex_.try_lock_for(std::chrono::milliseconds(timeout_ms));
+    bool tryLock(uint32_t timeout_ms = 0) {
+        (void)timeout_ms;  // Suppress warning
+        return mutex_.try_lock();
     }
     
-    // Unlock mutex
     void unlock() {
         mutex_.unlock();
     }
     
-    // RAII lock guard helper
     class Guard {
     private:
         Mutex& mutex_;
@@ -35,8 +33,6 @@ public:
         ~Guard() {
             mutex_.unlock();
         }
-        
-        // Non-copyable
         Guard(const Guard&) = delete;
         Guard& operator=(const Guard&) = delete;
     };

@@ -28,15 +28,14 @@ public:
         start_time_ = std::chrono::steady_clock::now();
     }
     
-    // Start measurement
-    uint64_t startMeasurement(const std::string& task_name) {
+    // Start measurement (NO PARAMETER)
+    uint64_t startMeasurement() {
         auto now = std::chrono::high_resolution_clock::now();
         return std::chrono::duration_cast<std::chrono::nanoseconds>(
             now.time_since_epoch()
         ).count();
     }
     
-    // End measurement
     void endMeasurement(const std::string& task_name, uint64_t start_ns) {
         auto now = std::chrono::high_resolution_clock::now();
         uint64_t end_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -60,13 +59,11 @@ public:
         metrics.execution_samples.push_back(duration_ns);
     }
     
-    // Record context switch
     void recordContextSwitch(uint64_t latency_ns) {
         total_context_switches_++;
         context_switch_latencies_.push_back(latency_ns);
     }
     
-    // Get uptime in milliseconds
     uint32_t getUptimeMs() const {
         auto now = std::chrono::steady_clock::now();
         return std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -74,7 +71,6 @@ public:
         ).count();
     }
     
-    // Print summary
     void printSummary() const {
         std::cout << "\n╔════════════════════════════════════════════════╗" << std::endl;
         std::cout << "║        PERFORMANCE SUMMARY                      ║" << std::endl;
@@ -131,7 +127,6 @@ public:
         std::cout << std::endl;
     }
     
-    // Save to JSON
     void saveToJson(const std::string& filename) const {
         std::ofstream file(filename);
         
@@ -139,7 +134,6 @@ public:
         file << "  \"runtime_ms\": " << getUptimeMs() << ",\n";
         file << "  \"context_switches\": " << total_context_switches_ << ",\n";
         
-        // Calculate avg context switch latency
         if (!context_switch_latencies_.empty()) {
             uint64_t total = 0;
             for (auto l : context_switch_latencies_) total += l;
