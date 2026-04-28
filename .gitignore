@@ -1,0 +1,28 @@
+# Build directories
+build/
+cmake-build-*/
+*.o
+*.a
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Results
+comparison/results/*.json
+comparison/results/*.csv
+
+# Python
+__pycache__/
+*.pyc
+venv/
+env/
+
+# Logs
+*.log
