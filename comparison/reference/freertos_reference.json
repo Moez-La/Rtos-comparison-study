@@ -1,0 +1,36 @@
+{
+  "runtime_ms": 37002,
+  "context_switches": 0,
+  "tasks": {
+    "CANTask": {
+      "count": 683,
+      "avg_ns": 54170265,
+      "min_ns": 202150,
+      "max_ns": 62245920
+    },
+    "ControlTask": {
+      "count": 679,
+      "avg_ns": 54408172,
+      "min_ns": 30785,
+      "max_ns": 121826634
+    },
+    "DisplayTask": {
+      "count": 171,
+      "avg_ns": 55226,
+      "min_ns": 37497,
+      "max_ns": 116216
+    },
+    "LoggingTask": {
+      "count": 34,
+      "avg_ns": 56078,
+      "min_ns": 1002,
+      "max_ns": 622624
+    },
+    "SensorTask": {
+      "count": 341,
+      "avg_ns": 75156,
+      "min_ns": 28794,
+      "max_ns": 318715
+    }
+  }
+}
