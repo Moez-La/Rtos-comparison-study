@@ -43,13 +43,26 @@ The application simulates a **real-time industrial monitoring and control system
 
 ---
 
+## 🧠 Custom RTOS Design
+
+- Priority-based scheduler  
+- Task states: READY / RUNNING / BLOCKED  
+- Tick-based execution model  
+- Cooperative scheduling (user-space simulation)  
+- Synchronization primitives:
+  - Mutex
+  - Semaphore
+  - Queue  
+
+---
+
 ## 📊 Performance Results
 
 ### Execution Time Comparison
 
 ![Task Execution Times](comparison/analysis/charts/task_execution_times.png)
 
-**Key Finding:** Custom RTOS achieves **9x faster** execution on time-critical SensorTask (8.18μs vs 75.16μs)
+**Key Observation**: Custom RTOS shows lower execution latency on SensorTask (8.18μs vs 75.16μs)
 
 ### Task Execution Counts
 
@@ -59,26 +72,27 @@ The application simulates a **real-time industrial monitoring and control system
 
 ![Comparison Summary](comparison/analysis/charts/comparison_summary.png)
 
+Note: Execution time differences must be interpreted alongside execution frequency and scheduling behavior.
+
 ---
 
 ## 🏆 Results Summary
 
-| Metric | Custom RTOS | FreeRTOS | Winner |
-|--------|-------------|----------|--------|
-| **SensorTask** | 8.18 μs | 75.16 μs | ✅ Custom (9x faster) |
-| **ControlTask** | 50.07 ms | 54.41 ms | ✅ Custom |
-| **CANTask** | 50.17 ms | 54.17 ms | ✅ Custom |
-| **DisplayTask** | 58.98 μs | 55.23 μs | ✅ FreeRTOS |
-| **LoggingTask** | 65.09 μs | 56.08 μs | ✅ FreeRTOS |
-| **Performance Winner** | ✅ **3/5 tasks** | 2/5 tasks | **Custom RTOS** |
+| Metric | Custom RTOS | FreeRTOS |
+|--------|-------------|----------|
+| **SensorTask** | 8.18 μs | 75.16 μs |
+| **ControlTask** | 50.07 ms | 54.41 ms |
+| **CANTask** | 50.17 ms | 54.17 ms |
+| **DisplayTask** | 58.98 μs | 55.23 μs |
+| **LoggingTask** | 65.09 μs | 56.08 μs |
 
 ---
 
 ## 💡 Key Insights
 
 ### Custom RTOS Advantages
-✅ **Superior raw performance** (9x faster on critical paths)  
-✅ **Minimal overhead** - lightweight implementation  
+✅ **Lower execution** latency due to reduced overhead  
+✅ **Lightweight design** with minimal abstraction   
 ✅ **Full control** - complete understanding of internals  
 ✅ **Educational value** - learn RTOS design from scratch  
 
@@ -89,9 +103,22 @@ The application simulates a **real-time industrial monitoring and control system
 ✅ **Ecosystem** - debugging tools, support, documentation  
 ✅ **Professional support** - commercial backing available  
 
+⚠️ Performance differences are influenced by scheduling behavior and execution frequency.
+
 ### Recommendation
 - **Prototyping / Research / Education** → Custom RTOS
 - **Production / Safety-Critical / Industrial** → FreeRTOS
+
+---
+
+## ⚠️ Benchmark Limitations
+
+- Results obtained in POSIX/Linux simulation
+- Not real embedded hardware
+- Different execution frequency between systems
+- FreeRTOS includes additional safety and scheduling overhead
+
+This is not a direct hardware comparison.
 
 ---
 
@@ -106,68 +133,6 @@ The application simulates a **real-time industrial monitoring and control system
 | **Build System** | CMake 3.15+ | Cross-platform build |
 | **Charts** | Matplotlib | Data visualization |
 
----
-
-![Task Execution Times](comparison/analysis/charts/task_execution_times.png)
-
-**Key Finding:** Custom RTOS achieves **9x faster** execution on time-critical SensorTask (8.18μs vs 75.16μs)
-
-### Task Execution Counts
-
-![Task Counts](comparison/analysis/charts/task_counts.png)
-
-### Summary Table
-
-![Comparison Summary](comparison/analysis/charts/comparison_summary.png)
-
----
-
-## 🏆 Results Summary
-
-| Metric | Custom RTOS | FreeRTOS | Winner |
-|--------|-------------|----------|--------|
-| **SensorTask** | 8.18 μs | 75.16 μs | ✅ Custom (9x faster) |
-| **ControlTask** | 50.07 ms | 54.41 ms | ✅ Custom |
-| **CANTask** | 50.17 ms | 54.17 ms | ✅ Custom |
-| **DisplayTask** | 58.98 μs | 55.23 μs | ✅ FreeRTOS |
-| **LoggingTask** | 65.09 μs | 56.08 μs | ✅ FreeRTOS |
-| **Performance Winner** | ✅ **3/5 tasks** | 2/5 tasks | **Custom RTOS** |
-
----
-
-## 💡 Key Insights
-
-### Custom RTOS Advantages
-✅ **Superior raw performance** (9x faster on critical paths)  
-✅ **Minimal overhead** - lightweight implementation  
-✅ **Full control** - complete understanding of internals  
-✅ **Educational value** - learn RTOS design from scratch  
-
-### FreeRTOS Advantages
-✅ **Industrial robustness** - battle-tested in millions of devices  
-✅ **Safety certification** - IEC 61508, ISO 26262, DO-178C  
-✅ **Portability** - 40+ architectures supported  
-✅ **Ecosystem** - debugging tools, support, documentation  
-✅ **Professional support** - commercial backing available  
-
-### Recommendation
-- **Prototyping / Research / Education** → Custom RTOS
-- **Production / Safety-Critical / Industrial** → FreeRTOS
-
----
-
-## 🛠️ Technologies Used
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| **Custom RTOS** | C++17 | Scheduler, tasks, synchronization primitives |
-| **FreeRTOS** | C11 | Industry-standard RTOS kernel |
-| **Application** | C++17 | Industrial control logic |
-| **Analysis** | Python 3 | Performance comparison & visualization |
-| **Build System** | CMake 3.15+ | Cross-platform build |
-| **Charts** | Matplotlib | Data visualization |
-
----
 ---
 
 ## 🚀 Quick Start
@@ -289,6 +254,15 @@ This project is for educational purposes.
 
 ---
 
+## 👤 My Contribution
+
+- Designed and implemented a custom RTOS from scratch in C++
+- Implemented scheduler, synchronization primitives and task system
+- Integrated FreeRTOS for comparison
+- Built benchmarking and analysis tools
+
+---
+
 ## 👤 Author
 
 **Moez Chagraoui**  
@@ -305,3 +279,4 @@ Double Degree: INP-ENSEEIHT (ACISE) & ENIT (Electrical Engineering)
 ---
 
 **⭐ Star this repo if you found it useful!**
+
