@@ -1,165 +1,189 @@
-# 🔬 RTOS Comparison Study: Custom Implementation vs FreeRTOS
+# 🚀 RTOS Comparison Study
 
-> **Comparative analysis of a custom-built RTOS (C++) versus industry-standard FreeRTOS (C) using identical industrial control system workload**
+**Comparative Performance Analysis: Custom RTOS vs FreeRTOS**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![C++17](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
-[![FreeRTOS](https://img.shields.io/badge/FreeRTOS-10.6.2-orange.svg)](https://www.freertos.org/)
-
----
-
-## 🎯 Project Overview
-
-This project implements the **same real-time industrial controller** using two different RTOS approaches:
-
-1. **Custom RTOS** - Built from scratch in modern C++17
-2. **FreeRTOS** - Industry-standard RTOS in C
-
-Both implementations control an identical 5-task system and are benchmarked across multiple performance metrics.
+[![Language: C++](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
+[![Language: C](https://img.shields.io/badge/C-11-blue.svg)](https://en.wikipedia.org/wiki/C11)
+[![Language: Python](https://img.shields.io/badge/Python-3.x-green.svg)](https://www.python.org/)
+[![Build: CMake](https://img.shields.io/badge/Build-CMake-red.svg)](https://cmake.org/)
+[![FreeRTOS: v11.1.0](https://img.shields.io/badge/FreeRTOS-v11.1.0-orange.svg)](https://www.freertos.org/)
 
 ---
 
-## 🏭 Industrial Control System
+## 📋 Project Overview
 
-**Application:** Multi-sensor industrial monitoring and control
+This project implements and compares two Real-Time Operating Systems (RTOS) for an **industrial control application**:
 
-**Tasks (identical in both implementations):**
+1. **Custom RTOS** - Built from scratch in C++
+2. **FreeRTOS v11.1.0** - Industry-standard RTOS
+
+Both systems run **identical 5-task industrial control applications** to enable fair performance comparison.
+
+---
+
+## 🏗️ System Architecture
+
+### Industrial Control Application
+
+The application simulates a **real-time industrial monitoring and control system** with:
 
 | Task | Priority | Period | Function |
 |------|----------|--------|----------|
-| **SensorTask** | 3 | 100ms | Acquire temperature & pressure data |
-| **ControlTask** | 4 | 50ms | Process data, make control decisions |
-| **CANTask** | 5 (highest) | Event-driven | Emergency CAN bus communication |
-| **DisplayTask** | 2 | 200ms | Update system status display |
-| **LoggingTask** | 1 (lowest) | 1000ms | Log metrics to file |
+| **SensorTask** | 3 | 100ms | Temperature & pressure acquisition |
+| **ControlTask** | 4 | 50ms | Decision logic & emergency detection |
+| **CANTask** | 5 (highest) | Event-driven | Emergency CAN messaging |
+| **DisplayTask** | 2 | 200ms | System status display |
+| **LoggingTask** | 1 (lowest) | 1000ms | Performance metrics logging |
 
-**Inter-task Communication:**
-- Queue: Sensor → Control
-- Mutex: Shared UART/Display
-- Semaphore: CAN ready signal
+### Communication & Synchronization
 
----
-
-## 📊 Comparison Metrics
-
-### Performance
-- Context switch latency
-- Interrupt response time
-- Task activation latency
-- Jitter (timing variance)
-
-### Resource Usage
-- Code size (Flash)
-- RAM usage
-- Stack usage per task
-
-### CPU Load
-- Per-task CPU utilization
-- Scheduler overhead
-- Idle time percentage
-
-### Code Complexity
-- Lines of code
-- API ergonomics
-- Feature richness
+- **Queue** (size 10): Sensor → Control data transfer
+- **Mutex**: UART resource protection
+- **Binary Semaphore**: CAN emergency event signaling
 
 ---
 
+## 📊 Performance Results
 
-cat > README.md << 'EOF'
-# 🔬 RTOS Comparison Study: Custom Implementation vs FreeRTOS
+### Execution Time Comparison
 
-> **Comparative analysis of a custom-built RTOS (C++) versus industry-standard FreeRTOS (C) using identical industrial control system workload**
+![Task Execution Times](comparison/analysis/charts/task_execution_times.png)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![C++17](https://img.shields.io/badge/C++-17-blue.svg)](https://isocpp.org/)
-[![FreeRTOS](https://img.shields.io/badge/FreeRTOS-10.6.2-orange.svg)](https://www.freertos.org/)
+**Key Finding:** Custom RTOS achieves **9x faster** execution on time-critical SensorTask (8.18μs vs 75.16μs)
 
----
+### Task Execution Counts
 
-## 🎯 Project Overview
+![Task Counts](comparison/analysis/charts/task_counts.png)
 
-This project implements the **same real-time industrial controller** using two different RTOS approaches:
+### Summary Table
 
-1. **Custom RTOS** - Built from scratch in modern C++17
-2. **FreeRTOS** - Industry-standard RTOS in C
-
-Both implementations control an identical 5-task system and are benchmarked across multiple performance metrics.
+![Comparison Summary](comparison/analysis/charts/comparison_summary.png)
 
 ---
 
-## 🏭 Industrial Control System
+## 🏆 Results Summary
 
-**Application:** Multi-sensor industrial monitoring and control
-
-**Tasks (identical in both implementations):**
-
-| Task | Priority | Period | Function |
-|------|----------|--------|----------|
-| **SensorTask** | 3 | 100ms | Acquire temperature & pressure data |
-| **ControlTask** | 4 | 50ms | Process data, make control decisions |
-| **CANTask** | 5 (highest) | Event-driven | Emergency CAN bus communication |
-| **DisplayTask** | 2 | 200ms | Update system status display |
-| **LoggingTask** | 1 (lowest) | 1000ms | Log metrics to file |
-
-**Inter-task Communication:**
-- Queue: Sensor → Control
-- Mutex: Shared UART/Display
-- Semaphore: CAN ready signal
+| Metric | Custom RTOS | FreeRTOS | Winner |
+|--------|-------------|----------|--------|
+| **SensorTask** | 8.18 μs | 75.16 μs | ✅ Custom (9x faster) |
+| **ControlTask** | 50.07 ms | 54.41 ms | ✅ Custom |
+| **CANTask** | 50.17 ms | 54.17 ms | ✅ Custom |
+| **DisplayTask** | 58.98 μs | 55.23 μs | ✅ FreeRTOS |
+| **LoggingTask** | 65.09 μs | 56.08 μs | ✅ FreeRTOS |
+| **Performance Winner** | ✅ **3/5 tasks** | 2/5 tasks | **Custom RTOS** |
 
 ---
 
-## 📊 Comparison Metrics
+## 💡 Key Insights
 
-### Performance
-- Context switch latency
-- Interrupt response time
-- Task activation latency
-- Jitter (timing variance)
+### Custom RTOS Advantages
+✅ **Superior raw performance** (9x faster on critical paths)  
+✅ **Minimal overhead** - lightweight implementation  
+✅ **Full control** - complete understanding of internals  
+✅ **Educational value** - learn RTOS design from scratch  
 
-### Resource Usage
-- Code size (Flash)
-- RAM usage
-- Stack usage per task
+### FreeRTOS Advantages
+✅ **Industrial robustness** - battle-tested in millions of devices  
+✅ **Safety certification** - IEC 61508, ISO 26262, DO-178C  
+✅ **Portability** - 40+ architectures supported  
+✅ **Ecosystem** - debugging tools, support, documentation  
+✅ **Professional support** - commercial backing available  
 
-### CPU Load
-- Per-task CPU utilization
-- Scheduler overhead
-- Idle time percentage
-
-### Code Complexity
-- Lines of code
-- API ergonomics
-- Feature richness
+### Recommendation
+- **Prototyping / Research / Education** → Custom RTOS
+- **Production / Safety-Critical / Industrial** → FreeRTOS
 
 ---
 
-## 🛠️ Project Structure
-- Code size (Flash)
-- RAM usage
-- Stack usage per task
+## 🛠️ Technologies Used
 
-### CPU Load
-- Per-task CPU utilization
-- Scheduler overhead
-- Idle time percentage
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Custom RTOS** | C++17 | Scheduler, tasks, synchronization primitives |
+| **FreeRTOS** | C11 | Industry-standard RTOS kernel |
+| **Application** | C++17 | Industrial control logic |
+| **Analysis** | Python 3 | Performance comparison & visualization |
+| **Build System** | CMake 3.15+ | Cross-platform build |
+| **Charts** | Matplotlib | Data visualization |
 
-### Code Complexity
-- Lines of code
-- API ergonomics
-- Feature richness
+---
+
+![Task Execution Times](comparison/analysis/charts/task_execution_times.png)
+
+**Key Finding:** Custom RTOS achieves **9x faster** execution on time-critical SensorTask (8.18μs vs 75.16μs)
+
+### Task Execution Counts
+
+![Task Counts](comparison/analysis/charts/task_counts.png)
+
+### Summary Table
+
+![Comparison Summary](comparison/analysis/charts/comparison_summary.png)
+
+---
+
+## 🏆 Results Summary
+
+| Metric | Custom RTOS | FreeRTOS | Winner |
+|--------|-------------|----------|--------|
+| **SensorTask** | 8.18 μs | 75.16 μs | ✅ Custom (9x faster) |
+| **ControlTask** | 50.07 ms | 54.41 ms | ✅ Custom |
+| **CANTask** | 50.17 ms | 54.17 ms | ✅ Custom |
+| **DisplayTask** | 58.98 μs | 55.23 μs | ✅ FreeRTOS |
+| **LoggingTask** | 65.09 μs | 56.08 μs | ✅ FreeRTOS |
+| **Performance Winner** | ✅ **3/5 tasks** | 2/5 tasks | **Custom RTOS** |
+
+---
+
+## 💡 Key Insights
+
+### Custom RTOS Advantages
+✅ **Superior raw performance** (9x faster on critical paths)  
+✅ **Minimal overhead** - lightweight implementation  
+✅ **Full control** - complete understanding of internals  
+✅ **Educational value** - learn RTOS design from scratch  
+
+### FreeRTOS Advantages
+✅ **Industrial robustness** - battle-tested in millions of devices  
+✅ **Safety certification** - IEC 61508, ISO 26262, DO-178C  
+✅ **Portability** - 40+ architectures supported  
+✅ **Ecosystem** - debugging tools, support, documentation  
+✅ **Professional support** - commercial backing available  
+
+### Recommendation
+- **Prototyping / Research / Education** → Custom RTOS
+- **Production / Safety-Critical / Industrial** → FreeRTOS
+
+---
+
+## 🛠️ Technologies Used
+
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| **Custom RTOS** | C++17 | Scheduler, tasks, synchronization primitives |
+| **FreeRTOS** | C11 | Industry-standard RTOS kernel |
+| **Application** | C++17 | Industrial control logic |
+| **Analysis** | Python 3 | Performance comparison & visualization |
+| **Build System** | CMake 3.15+ | Cross-platform build |
+| **Charts** | Matplotlib | Data visualization |
 
 ---
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- CMake 3.15+
-- C++17 compiler (GCC 9+ / Clang 10+ / MSVC 2019+)
-- Python 3.8+ (for analysis scripts)
 
-### Build Custom RTOS
+```bash
+# Ubuntu/Debian
+sudo apt install build-essential cmake python3 python3-pip
+
+# Python dependencies
+pip3 install matplotlib --break-system-packages
+```
+
+### Build & Run Custom RTOS
+
 ```bash
 cd custom-rtos
 mkdir build && cd build
@@ -168,63 +192,116 @@ make
 ./industrial_controller
 ```
 
-### Build FreeRTOS Implementation
+### Build & Run FreeRTOS
+
 ```bash
-cd freertos-impl
+cd freertos
 mkdir build && cd build
 cmake ..
 make
-./industrial_controller_freertos
+./industrial_controller
+# Press Ctrl+C after ~10 seconds
 ```
 
-### Run Comparison
+### Generate Comparison Analysis
+
 ```bash
-cd comparison/scripts
-python3 generate_report.py
+cd comparison/analysis
+python3 compare.py
 ```
 
----
-
-## 📈 Results Preview
-
-*Results will be populated after benchmark runs...*
+**Output:**
+- `report.md` - Detailed comparison report
+- `charts/*.png` - Performance graphs
 
 ---
 
-## 🎓 Learning Objectives
+## 📈 Performance Metrics Collected
+
+For each task:
+- **Execution count** - Total number of executions
+- **Average time** - Mean execution duration (nanoseconds)
+- **Min/Max time** - Best/worst case performance
+- **Samples** - All execution time measurements
+
+System-wide:
+- **Total runtime** (milliseconds)
+- **Context switches** - Scheduler overhead
+
+---
+
+## 🎓 Educational Value
 
 This project demonstrates:
-- ✅ RTOS internals (scheduler, context switching, synchronization)
-- ✅ Modern C++ for embedded systems
-- ✅ FreeRTOS API and best practices
-- ✅ Performance benchmarking methodology
-- ✅ Real-time system design patterns
+
+1. **RTOS Design Principles**
+   - Task scheduling (priority-based preemptive)
+   - Inter-process communication (queues)
+   - Synchronization primitives (mutex, semaphore)
+   - Real-time constraints handling
+
+2. **Embedded Systems Concepts**
+   - Periodic vs event-driven tasks
+   - Priority inversion handling
+   - Deterministic timing
+   - Resource sharing
+
+3. **Performance Engineering**
+   - Benchmarking methodology
+   - Overhead analysis
+   - Trade-off evaluation
 
 ---
 
-## 🔮 Project Status
+## 📚 Key Learnings
 
-- [x] Phase 0: Project setup
-- [ ] Phase 1: Custom RTOS implementation (C++)
-- [ ] Phase 2: FreeRTOS implementation (C)
-- [ ] Phase 3: Comparative analysis
+### Custom RTOS Implementation Challenges
+- Task state management
+- Priority-based scheduling logic
+- Event-driven task wake-up
+- Mutex/semaphore implementation with std::mutex/condition_variable
+
+### FreeRTOS Integration
+- POSIX port configuration
+- Memory management (heap_3)
+- API differences (vTaskDelayUntil, xQueueSend, etc.)
+- Timing conversion (pdMS_TO_TICKS)
 
 ---
 
-**🚧 Under Development** - Check back for updates!
+## 🔬 Future Enhancements
+
+- [ ] Add Round-Robin scheduling to Custom RTOS
+- [ ] Implement memory pool allocator
+- [ ] Add task profiling visualization
+- [ ] Port to embedded hardware (STM32, ESP32)
+- [ ] Compare with other RTOS (Zephyr, RT-Thread)
+- [ ] Add power consumption analysis
+
+---
+
+## 📄 License
+
+This project is for educational purposes.
+
+- **Custom RTOS code**: MIT License
+- **FreeRTOS kernel**: MIT License (see freertos-kernel/LICENSE.md)
 
 ---
 
 ## 👤 Author
 
-**Moez Chagraoui**
-- 🎓 Double Degree: INP-ENSEEIHT Toulouse (ACISE) & ENIT Tunis (Electrical Engineering)
-- 💼 Embedded Systems Engineer | Real-Time Software Specialist
-- 📧 moezchagraoui@gmail.com
-- 🔗 [LinkedIn](https://www.linkedin.com/in/moez-chagraoui) | [GitHub](https://github.com/Moez-La)
+**Moez Chagraoui**  
+Embedded Systems Engineer  
+Double Degree: INP-ENSEEIHT (ACISE) & ENIT (Electrical Engineering)
 
 ---
 
-## 📜 License
+## 🙏 Acknowledgments
 
-MIT License - see LICENSE file for details
+- FreeRTOS community and documentation
+- CMake & Matplotlib open-source projects
+
+---
+
+**⭐ Star this repo if you found it useful!**
